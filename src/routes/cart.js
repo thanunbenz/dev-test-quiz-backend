@@ -14,36 +14,34 @@ router.post("/cart", async (req, res) => {
         });
 
         if (!findProduct) {
-            res.send({
+            return res.status(404).send({
                 message: "Product not found"
             });
         }
 
-        const findCart = await prisma.cart.findUnique({
-            where: { id: productID }
+        const findCart = await prisma.cart.findFirst({
+            where: { productID: productID }
         });
 
         if (findCart) {
-            res.send({
+            return res.status(409).send({
                 message: "Cart already exists"
             });
         }
 
-        const total_price = productID.price * qty;
+        const total_price = findProduct.price * qty;
 
-        await prisma.cart.create({
+        const cartItem = await prisma.cart.create({
             data: {
-                productID: {
-                    connect: { id: productID }
-                },
+                productID,
                 qty,
                 total_price
             }
         });
-        res.status(201).json(cartItem);
+        return res.status(201).json(cartItem);
     } catch (error) {
         console.log(error);
-        res.status(500).send("Internal Server Error");
+        return res.status(500).send("Internal Server Error");
     }
 })
 //READ
@@ -109,7 +107,7 @@ router.delete("/cart/:id", async (req, res) => {
         });
 
         if (!findProduct) {
-            res.send({
+            return res.send({
                 message: "Cart item not found"
             });
         }
@@ -118,7 +116,7 @@ router.delete("/cart/:id", async (req, res) => {
             where: { id: Number(id) }
         });
 
-        res.json({ message: "Cart item deleted" });
+        return res.json({ message: "Cart item deleted" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error", details: error.message });
@@ -131,7 +129,7 @@ router.get("/cart/total", async (req, res) => {
 
         const totalCart = calPrice(total)
 
-        res.send({ totalCart })
+        return res.send({ totalCart })
 
     } catch (error) {
         console.error(error);

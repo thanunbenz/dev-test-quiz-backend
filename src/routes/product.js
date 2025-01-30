@@ -52,7 +52,6 @@ router.get("/product", async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skip = (page - 1) * pageSize;
-    console.log(skip);
     try {
 
         const [products, totalProducts] = await prisma.$transaction([
