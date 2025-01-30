@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient()
 const express = require('express')
 const router = express.Router()
-const calPrice = require('../utility/calprice')
+const { calPrice } = require('../utility/calprice')
 
 //CRETE
 router.post("/cart", async (req, res) => {
@@ -129,9 +129,9 @@ router.get("/cart/total", async (req, res) => {
     try {
         const total = await prisma.cart.findMany();
 
-        const f = calPrice(total)
+        const totalCart = calPrice(total)
 
-        console.log(f);
+        res.send({ totalCart })
 
     } catch (error) {
         console.error(error);
