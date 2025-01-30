@@ -5,7 +5,7 @@ const router = express.Router()
 const { calPrice } = require('../utility/calprice')
 
 //CRETE
-router.post("/cart", async (req, res) => {
+router.post("/carts", async (req, res) => {
     try {
         const { productID, qty } = req.body;
 
@@ -45,7 +45,7 @@ router.post("/cart", async (req, res) => {
     }
 })
 //READ
-router.get("/cart", async (req, res) => {
+router.get("/carts", async (req, res) => {
     try {
         const cart = await prisma.cart.findMany({
             include: {
@@ -59,7 +59,7 @@ router.get("/cart", async (req, res) => {
     }
 })
 //UPDATE
-router.put("/cart/:id", async (req, res) => {
+router.put("/carts/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { qty } = req.body;
@@ -98,7 +98,7 @@ router.put("/cart/:id", async (req, res) => {
     }
 })
 //DEL
-router.delete("/cart/:id", async (req, res) => {
+router.delete("/carts/:id", async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -123,7 +123,7 @@ router.delete("/cart/:id", async (req, res) => {
     }
 })
 //CAL
-router.get("/cart/total", async (req, res) => {
+router.get("/carts/total", async (req, res) => {
     try {
         const total = await prisma.cart.findMany();
 
