@@ -63,13 +63,14 @@ router.put("/carts/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { qty } = req.body;
+
         const findProduct = await prisma.cart.findUnique({
             where: { id: Number(id) },
             include: { product: true }
         });
 
         if (!findProduct) {
-            res.send({
+            return res.send({
                 message: "Cart item not found"
             });
         }
@@ -79,13 +80,11 @@ router.put("/carts/:id", async (req, res) => {
             return res.json({ message: "Cart item deleted" });
         }
 
-        const totalPrice = findProduct.product.price * qty;
-
         const updateCart = await prisma.cart.update({
             where: { id: Number(id) },
             data: {
                 qty: qty,
-                total_price: totalPrice
+                total_price: findProduct.total_price
             }
         })
 
